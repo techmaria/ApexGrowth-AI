@@ -26,6 +26,7 @@ import {
   removeCustomBackground,
   ImagenAspectRatio,
 } from '../../services/imagenService';
+import { VideoComposer } from '../VideoComposer';
 
 interface DraftStudioViewProps {
   opportunities: ContentOpportunity[];
@@ -512,6 +513,15 @@ Generate exactly 3 diverse, high-retention multimodal video drafts in JSON forma
             </div>
           </div>
         </div>
+      )}
+
+      {/* 60-Second Video Composer (Mode A Free-First & Mode B Gated) */}
+      {currentOpportunity && (
+        <VideoComposer
+          opportunity={currentOpportunity}
+          draft={drafts[0]}
+          onShowToast={onShowToast}
+        />
       )}
 
       {/* NEW: Imagen API & Custom Background Studio Panel */}

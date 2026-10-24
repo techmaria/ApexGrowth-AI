@@ -237,5 +237,179 @@ export interface TrendingTopicsData {
   dominantPlatform: string;
 }
 
+// -------------------------------------------------------------
+// Video Content Intelligence & Market Research Types
+// -------------------------------------------------------------
 
+export type VideoSourceType = 'MP4_UPLOAD' | 'YOUTUBE_URL';
 
+export interface SceneBreakdownItem {
+  sceneNumber: number;
+  timestampStart: string; // e.g. "00:00"
+  timestampEnd: string;   // e.g. "00:03"
+  durationSeconds: number;
+  visualDescription: string;
+  editingPace: 'Kinetic / Fast' | 'Moderate' | 'Deliberate / Slow' | 'Jump Cut Sequence';
+  spokenDialogue: string; // verbatim speech
+  onScreenText: string;   // captions / text overlays
+  productPresentation: string; // e.g., Hero Reveal, Organic In-Use, Problem Illustration, None
+  emotionalTrigger: string;   // e.g., Curiosity, Relief, Aspiration, FOMO, Humor, Empathy
+}
+
+export interface VideoHookAnalysis {
+  hookDurationSeconds: number;
+  hookVerbatim: string; // First 1-3 seconds transcript
+  hookVisualAction: string;
+  hookPattern:
+    | 'Contrarian Question'
+    | 'Bold Transformation'
+    | 'Pattern Interrupt'
+    | 'Story Cliffhanger'
+    | 'Shocking Statistic'
+    | 'Relatable Frustration';
+  retentionImpactScore: number; // 1-100
+  directEvidenceQuote: string;
+  aiInterpretation: string;
+}
+
+export interface MarketResearchStats {
+  views: number;
+  likes: number;
+  comments: number;
+  publishDate: string;
+  creatorName: string;
+  creatorHandle: string;
+  engagementRate: number; // Disclosed formula: ((likes + comments) / views) * 100
+  engagementFormula: string;
+  verifiedPlatformData: boolean;
+  identifiedStrengths: string[];
+  identifiedWeaknesses: string[];
+}
+
+export interface DerivativeContentConcept {
+  id: string;
+  conceptType: 'Educational' | 'Storytelling' | 'Promotional';
+  title: string;
+  targetAudience: string;
+  openingHook: string;
+  durationSeconds: number; // 60s
+  script: string;
+  scenes: Array<{
+    sceneNumber: number;
+    timeRange: string;
+    visual: string;
+    audio: string;
+  }>;
+  suggestedVisuals: string;
+  voiceOverDirections: string;
+  captionsAndHashtags: string;
+  primaryCta: string;
+  recommendedPlatform: string;
+  whyItDifferentiates: string;
+}
+
+export interface VideoAnalysisResult {
+  id: string;
+  videoTitle: string;
+  sourceType: VideoSourceType;
+  sourceUrlOrName: string;
+  durationSeconds: number;
+  videoFormat: '9:16 Vertical Short' | '16:9 Landscape' | '1:1 Square';
+  analyzedAt: string;
+  hookAnalysis: VideoHookAnalysis;
+  sceneBreakdown: SceneBreakdownItem[];
+  spokenDialogueFull: string;
+  onScreenTextFull: string[];
+  pacingAnalysis: {
+    cutsPerMinute: number;
+    avgSceneDuration: string;
+    pacingVerdict: string;
+  };
+  storytellingTechnique: string;
+  audienceTargetingNotes: string;
+  callsToAction: string[];
+  brandingVisualConsistency: string;
+  reusableCreativePatterns: Array<{
+    pattern: string;
+    evidenceTimestamp: string;
+    explanation: string;
+  }>;
+  marketStats: MarketResearchStats;
+  derivativeConcepts: DerivativeContentConcept[];
+}
+
+export interface CompetitorComparisonMatrix {
+  videos: VideoAnalysisResult[];
+  hookComparison: string;
+  structureComparison: string;
+  pacingComparison: string;
+  audiencePositioningComparison: string;
+  ctaComparison: string;
+  commonCreativePatterns: string[];
+  differentiationOpportunities: string[];
+}
+
+// -------------------------------------------------------------
+// Cost Control & Usage Center Types
+// -------------------------------------------------------------
+
+export type ProviderStatusType =
+  | 'CONNECTED'
+  | 'NOT_CONFIGURED'
+  | 'FREE_TIER'
+  | 'TRIAL_CREDITS'
+  | 'PAID'
+  | 'QUOTA_EXCEEDED'
+  | 'BILLING_REQUIRED'
+  | 'TEMPORARILY_UNAVAILABLE'
+  | 'DISABLED';
+
+export interface ProviderAdapterInfo {
+  id: string;
+  name: string;
+  category:
+    | 'Text Generation'
+    | 'Trend Discovery'
+    | 'News Discovery'
+    | 'Stock Video Discovery'
+    | 'AI Video Generation'
+    | 'Video Rendering'
+    | 'Text-to-Speech'
+    | 'Database'
+    | 'Analytics'
+    | 'Social Publishing';
+  status: ProviderStatusType;
+  costClassification: 'ZERO_COST' | 'FREE_TIER_ELIGIBLE' | 'BLOCKED_PAID';
+  pricingVerified: boolean;
+  notes: string;
+}
+
+export interface CostControlStatus {
+  mode: 'ZERO_BILLING';
+  utcResetDate: string;
+  timeUntilResetUtc: string;
+  dailyCounters: {
+    geminiTextGenerations: number;
+    geminiTextGenerationsLimit: number;
+    opportunityDiscoveries: number;
+    opportunityDiscoveriesLimit: number;
+    videoRenderAttempts: number;
+    videoRenderAttemptsLimit: number;
+    videoIntelAnalyses: number;
+    videoIntelAnalysesLimit: number;
+    aiVideoGenerations: number;
+    aiVideoGenerationsLimit: number;
+  };
+  concurrency: {
+    activeJobs: number;
+    maxConcurrentAiJobs: number;
+    maxConcurrentVideoRenders: number;
+  };
+  safeguards: {
+    paidApiCallsBlocked: boolean;
+    automaticPurchasesDisabled: boolean;
+    autoPublishingDisabled: boolean;
+    circuitBreakerOpen: boolean;
+  };
+  providers: ProviderAdapterInfo[];
+}

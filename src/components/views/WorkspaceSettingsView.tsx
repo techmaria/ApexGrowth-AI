@@ -16,6 +16,12 @@ import {
   FileDown,
   Sun,
   Moon,
+  Shield,
+  Clock,
+  Lock,
+  RefreshCw,
+  Activity,
+  Check,
 } from 'lucide-react';
 import { CreatorBrief, ContentOpportunity } from '../../types';
 import { User } from 'firebase/auth';
@@ -24,6 +30,10 @@ import {
   generateSampleCSVTemplate,
   CSVParseResult,
 } from '../../services/csvService';
+import {
+  getCostControlStatus,
+  resetCountersForTesting,
+} from '../../services/costControlService';
 
 interface WorkspaceSettingsViewProps {
   brief: CreatorBrief;
@@ -58,6 +68,13 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
   const [forceQueuedStatus, setForceQueuedStatus] = useState(true);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [costStatus, setCostStatus] = useState(() => getCostControlStatus());
+
+  const handleResetCounters = () => {
+    resetCountersForTesting();
+    setCostStatus(getCostControlStatus());
+    onShowToast?.('info', 'Local prototype daily counters reset for testing.');
+  };
 
   // Trigger download of pre-formatted CSV template
   const handleDownloadTemplate = () => {
@@ -195,6 +212,265 @@ export const WorkspaceSettingsView: React.FC<WorkspaceSettingsViewProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column */}
         <div className="lg:col-span-8 space-y-6">
+          {/* Usage & Billing Control Center Card */}
+          <div className="bg-white dark:bg-[#121D19] rounded-2xl border border-[#E8E2D6] dark:border-[#22352E] p-6 space-y-6 shadow-2xs transition-colors">
+            {/* Header & Mode Badge */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4 border-[#F0EBE0] dark:border-[#20322B]">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="text-[10px] font-mono tracking-[0.2em] uppercase text-[#A87432] dark:text-[#E2A968] font-semibold flex items-center gap-1.5">
+                    <Shield className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />
+                    USAGE & BILLING CONTROL CENTER
+                  </div>
+                </div>
+                <h3 className="text-xl font-serif font-normal text-[#1A2521] dark:text-[#E8ECE9]">
+                  Cost Control & Zero-Billing Engine
+                </h3>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-semibold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 shadow-2xs">
+                  <Lock className="w-3 h-3 text-emerald-700 dark:text-emerald-400" />
+                  MODE: ZERO_BILLING (LOCKED)
+                </span>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#5E6E67] dark:text-[#9FB1A9] leading-relaxed">
+              ApexGrowth is strictly configured in <strong>ZERO_BILLING</strong> mode. All paid cloud resources, external billable API tiers, and automated credit card prepayments are blocked by application-level safety circuit breakers.
+            </p>
+
+            {/* Daily Usage Meters */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#1A2521] dark:text-[#E8ECE9] flex items-center gap-1.5">
+                  <Activity className="w-3.5 h-3.5 text-[#A87432] dark:text-[#E2A968]" />
+                  Conservative Prototype Daily Limits
+                </span>
+                <span className="text-[11px] font-mono text-[#7A8C84] dark:text-[#8E9F97] flex items-center gap-1">
+                  <Clock className="w-3 h-3" />
+                  Resets in {costStatus.timeUntilResetUtc} (00:00 UTC)
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Gemini Text Generations */}
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#172520] border border-[#E8E2D6] dark:border-[#243A30] space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-[#1A2521] dark:text-[#E8ECE9]">
+                      Gemini Text Generations
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-[#2C5E48] dark:text-[#7BC3A2]">
+                      {costStatus.dailyCounters.geminiTextGenerations} / {costStatus.dailyCounters.geminiTextGenerationsLimit}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#E8E2D6] dark:bg-[#20352C] rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (costStatus.dailyCounters.geminiTextGenerations /
+                            costStatus.dailyCounters.geminiTextGenerationsLimit) *
+                            100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#7A8C84] dark:text-[#8E9F97]">
+                    Free tier eligible (Google AI Studio Key). Max 10 calls/day.
+                  </p>
+                </div>
+
+                {/* Opportunity Discovery */}
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#172520] border border-[#E8E2D6] dark:border-[#243A30] space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-[#1A2521] dark:text-[#E8ECE9]">
+                      Opportunity Discovery Scans
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-[#2C5E48] dark:text-[#7BC3A2]">
+                      {costStatus.dailyCounters.opportunityDiscoveries} / {costStatus.dailyCounters.opportunityDiscoveriesLimit}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#E8E2D6] dark:bg-[#20352C] rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (costStatus.dailyCounters.opportunityDiscoveries /
+                            costStatus.dailyCounters.opportunityDiscoveriesLimit) *
+                            100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#7A8C84] dark:text-[#8E9F97]">
+                    Multi-signal search grounding. Max 5 refreshes/day.
+                  </p>
+                </div>
+
+                {/* Video Intelligence Analyses */}
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#172520] border border-[#E8E2D6] dark:border-[#243A30] space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-[#1A2521] dark:text-[#E8ECE9]">
+                      Video Intelligence Analyses
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-[#2C5E48] dark:text-[#7BC3A2]">
+                      {costStatus.dailyCounters.videoIntelAnalyses} / {costStatus.dailyCounters.videoIntelAnalysesLimit}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#E8E2D6] dark:bg-[#20352C] rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (costStatus.dailyCounters.videoIntelAnalyses /
+                            costStatus.dailyCounters.videoIntelAnalysesLimit) *
+                            100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#7A8C84] dark:text-[#8E9F97]">
+                    Multimodal 60s hook & scene breakdowns. Max 5/day.
+                  </p>
+                </div>
+
+                {/* Video Render Attempts */}
+                <div className="p-3.5 rounded-xl bg-[#FAF8F5] dark:bg-[#172520] border border-[#E8E2D6] dark:border-[#243A30] space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="font-medium text-[#1A2521] dark:text-[#E8ECE9]">
+                      Video Render Attempts
+                    </span>
+                    <span className="font-mono text-[11px] font-bold text-[#2C5E48] dark:text-[#7BC3A2]">
+                      {costStatus.dailyCounters.videoRenderAttempts} / {costStatus.dailyCounters.videoRenderAttemptsLimit}
+                    </span>
+                  </div>
+                  <div className="w-full bg-[#E8E2D6] dark:bg-[#20352C] rounded-full h-1.5 overflow-hidden">
+                    <div
+                      className="bg-emerald-600 h-1.5 rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(
+                          100,
+                          (costStatus.dailyCounters.videoRenderAttempts /
+                            costStatus.dailyCounters.videoRenderAttemptsLimit) *
+                            100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#7A8C84] dark:text-[#8E9F97]">
+                    Browser Canvas engine. Max 2 client exports/day.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Active System Safeguards Table */}
+            <div className="p-4 rounded-xl bg-[#FAF8F5] dark:bg-[#172520] border border-[#E8E2D6] dark:border-[#243A30] space-y-2.5">
+              <span className="text-xs font-semibold text-[#1A2521] dark:text-[#E8ECE9] block">
+                Active System Safeguards & Concurrency Limits
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px]">
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Paid APIs: Blocked</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Auto Purchases: Disabled</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Service Upgrades: Disabled</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Background AI Jobs: Disabled</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Max Concurrent Jobs: 1</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-emerald-800 dark:text-emerald-300">
+                  <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                  <span>Social Publishing: Manual</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Modular API Provider System Status */}
+            <div className="space-y-2.5">
+              <span className="text-xs font-semibold text-[#1A2521] dark:text-[#E8ECE9] block">
+                Modular API Provider System Status
+              </span>
+              <div className="space-y-1.5">
+                {costStatus.providers.map((prov) => {
+                  const isBlocked = prov.status === 'DISABLED' || prov.costClassification === 'BLOCKED_PAID';
+                  return (
+                    <div
+                      key={prov.id}
+                      className="p-2.5 rounded-lg border text-xs flex items-center justify-between gap-3 bg-white dark:bg-[#1B2B25] border-[#E8E2D6] dark:border-[#2D453B]"
+                    >
+                      <div className="truncate">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-[#1A2521] dark:text-[#E8ECE9]">
+                            {prov.name}
+                          </span>
+                          <span className="text-[10px] font-mono text-[#7A8C84] dark:text-[#8E9F97]">
+                            ({prov.category})
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-[#5E6E67] dark:text-[#9FB1A9] truncate">
+                          {prov.notes}
+                        </p>
+                      </div>
+
+                      <div className="shrink-0 flex items-center gap-1.5">
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono font-medium ${
+                            isBlocked
+                              ? 'bg-neutral-100 text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400'
+                              : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300'
+                          }`}
+                        >
+                          {prov.status}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Spend Cap Transparency Disclaimer */}
+            <div className="p-3.5 rounded-xl bg-amber-50/70 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-900/60 text-[11px] space-y-1 text-amber-900 dark:text-amber-200">
+              <div className="font-semibold flex items-center gap-1.5">
+                <AlertCircle className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                Spending Protection Disclaimer
+              </div>
+              <p className="leading-relaxed opacity-90">
+                These application-defined counters enforce strict safety limits to prevent accidental external billing. External cloud providers without hard spend caps will not be triggered while in ZERO_BILLING mode.
+              </p>
+            </div>
+
+            {/* Reset Testing Action */}
+            <div className="flex items-center justify-between pt-1 text-xs">
+              <span className="text-[11px] text-[#7A8C84] dark:text-[#8E9F97]">
+                UTC Day: {costStatus.utcResetDate}
+              </span>
+              <button
+                type="button"
+                onClick={handleResetCounters}
+                className="px-3 py-1 rounded-md border border-[#E0D9CD] dark:border-[#2B4037] text-[11px] font-medium text-[#5E6E67] dark:text-[#BAC7C1] hover:bg-[#FAF8F5] dark:hover:bg-[#172520] transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Reset Daily Counters (Testing)</span>
+              </button>
+            </div>
+          </div>
+
           {/* CSV Import & Export Hub Card */}
           <div className="bg-white dark:bg-[#121D19] rounded-2xl border border-[#E8E2D6] dark:border-[#22352E] p-6 space-y-5 shadow-2xs transition-colors">
             <div className="flex items-center justify-between">

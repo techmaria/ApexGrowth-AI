@@ -13,6 +13,7 @@ import {
   X,
   Sun,
   Moon,
+  Film,
 } from 'lucide-react';
 
 export type WorkspaceTab =
@@ -20,6 +21,7 @@ export type WorkspaceTab =
   | 'brief'
   | 'opportunities'
   | 'trends'
+  | 'video_intelligence'
   | 'draft_studio'
   | 'distribution'
   | 'calendar'
@@ -51,6 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'brief' as WorkspaceTab, label: 'Brief', icon: FileText },
     { id: 'opportunities' as WorkspaceTab, label: 'Opportunities', icon: Lightbulb },
     { id: 'trends' as WorkspaceTab, label: 'Trends', icon: Flame },
+    { id: 'video_intelligence' as WorkspaceTab, label: 'Video Intelligence', icon: Film },
     { id: 'draft_studio' as WorkspaceTab, label: 'Draft Studio', icon: Sparkles },
     { id: 'distribution' as WorkspaceTab, label: 'Distribution', icon: Share2 },
     { id: 'calendar' as WorkspaceTab, label: 'Calendar', icon: Calendar },

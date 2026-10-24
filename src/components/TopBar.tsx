@@ -15,6 +15,7 @@ const TAB_TITLES: Record<WorkspaceTab, string> = {
   brief: 'Brief',
   opportunities: 'Opportunities',
   trends: 'Trends',
+  video_intelligence: 'Video Intelligence',
   draft_studio: 'Draft Studio',
   distribution: 'Distribution',
   calendar: 'Calendar',

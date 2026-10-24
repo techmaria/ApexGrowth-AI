@@ -9,6 +9,7 @@ import { DistributionView } from './components/views/DistributionView';
 import { PublishingCalendarView } from './components/views/PublishingCalendarView';
 import { PerformanceView } from './components/views/PerformanceView';
 import { WorkspaceSettingsView } from './components/views/WorkspaceSettingsView';
+import { VideoIntelligenceView } from './components/views/VideoIntelligenceView';
 import { GoogleSheetsTab } from './components/GoogleSheetsTab';
 import { TrendAlerts } from './components/TrendAlerts';
 import { AddSignalModal } from './components/AddSignalModal';
@@ -700,6 +701,14 @@ export default function App() {
                 onAddSignalToQueue={handleAddSignal}
                 onShowToast={showToast}
                 existingOpportunityTitles={opportunities.map((o) => o.title)}
+              />
+            )}
+
+            {activeTab === 'video_intelligence' && (
+              <VideoIntelligenceView
+                onAddOpportunityToQueue={handleAddSignal}
+                onShowToast={showToast}
+                theme={theme}
               />
             )}
 
