@@ -1,0 +1,6 @@
+{
+  "name": "ApexGrowth AI",
+  "description": "Autonomous Social Media Manager & Multi-Signal Pipeline powered by Gemini, Veo, Imagen, BigQuery, and Google Cloud Run.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

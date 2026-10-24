@@ -1,0 +1,6 @@
+streamlit
+google-genai
+pandas
+requests
+google-cloud-bigquery
+google-cloud-storage

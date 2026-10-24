@@ -1,0 +1,159 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --chart-reach: #172822;
+  --chart-grid: #F0EBE0;
+  --chart-axis: #7A8C84;
+}
+
+html.dark {
+  --chart-reach: #4EA37E;
+  --chart-grid: #20332B;
+  --chart-axis: #8EA299;
+}
+
+@layer base {
+  body {
+    background-color: #F5F2EA;
+    color: #1E2724;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  html.dark body {
+    background-color: #0B120F;
+    color: #E8ECE9;
+  }
+
+  .font-serif {
+    font-family: 'Newsreader', Georgia, Cambria, 'Times New Roman', serif;
+  }
+
+  code, pre, .font-mono {
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+}
+
+/* Dark Theme Design System Overrides */
+html.dark .bg-white {
+  background-color: #121D19;
+}
+
+html.dark .bg-\[\#FAF8F4\],
+html.dark .bg-\[\#FAF8F5\],
+html.dark .bg-\[\#F7F4EE\],
+html.dark .bg-\[\#F5F2EA\],
+html.dark .bg-\[\#F4EFE6\],
+html.dark .bg-\[\#F5EFE6\] {
+  background-color: #16241F;
+}
+
+html.dark .bg-\[\#EAEFEA\],
+html.dark .bg-\[\#EAEFEA\]\/70,
+html.dark .bg-\[\#EAEFEA\]\/40 {
+  background-color: #192B23;
+}
+
+html.dark .text-\[\#1A2521\],
+html.dark .text-\[\#1E2724\],
+html.dark .text-\[\#182521\],
+html.dark .text-\[\#172822\]:not(.text-white) {
+  color: #E8ECE9;
+}
+
+html.dark .text-\[\#5E6E67\],
+html.dark .text-\[\#54645E\],
+html.dark .text-\[\#63756E\],
+html.dark .text-\[\#576B62\],
+html.dark .text-\[\#55655E\] {
+  color: #A3B5AD;
+}
+
+html.dark .text-\[\#7A8C84\],
+html.dark .text-\[\#889790\],
+html.dark .text-\[\#8B9892\],
+html.dark .text-\[\#73847C\] {
+  color: #8A9F96;
+}
+
+html.dark .text-\[\#A87432\] {
+  color: #E2A968;
+}
+
+html.dark .border-\[\#E8E2D6\],
+html.dark .border-\[\#E6DFD3\],
+html.dark .border-\[\#EBE5D9\],
+html.dark .border-\[\#E0D9CD\],
+html.dark .border-\[\#E2DDD3\],
+html.dark .border-\[\#D5DDD8\],
+html.dark .border-\[\#ECE5DA\],
+html.dark .border-\[\#D5E1D9\] {
+  border-color: #243730;
+}
+
+html.dark .border-\[\#F0EBE0\],
+html.dark .border-\[\#F2ECE2\] {
+  border-color: #1D2D27;
+}
+
+html.dark .hover\:bg-\[\#FAF8F4\]:hover,
+html.dark .hover\:bg-\[\#FAF8F5\]:hover,
+html.dark .hover\:bg-\[\#F5F0E6\]:hover,
+html.dark .hover\:bg-\[\#ECE5DA\]:hover,
+html.dark .hover\:bg-\[\#F5F2EA\]:hover {
+  background-color: #1D2E27;
+}
+
+html.dark input:not([type="checkbox"]):not([type="radio"]),
+html.dark textarea,
+html.dark select {
+  background-color: #14201B;
+  color: #E8ECE9;
+  border-color: #273D34;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #6C8278;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 9999px;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.32);
+}
+
+/* Ambient glow & pulse */
+@keyframes subtle-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 0.4; }
+}
+
+.animate-subtle-pulse {
+  animation: subtle-pulse 3s infinite ease-in-out;
+}
+
+
